@@ -8,6 +8,7 @@
 
 #import "TwsListViewController.h"
 #import "TweetTableViewCell.h"
+#import "TwitterClient.h"
 
 
 @interface TwsListViewController () <UITableViewDataSource>
@@ -25,6 +26,23 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     UINib *nib =[UINib nibWithNibName:@"TweetTableViewCell" bundle:nil];
     [self.tableView registerNib:nib forCellReuseIdentifier:@"TweetTableViewCell"];
+    
+    [self connectTwitter];
+}
+
+- (void) connectTwitter {
+    [[TwitterClient sharedInstance].requestSerializer removeAccessToken];
+    [[TwitterClient sharedInstance] fetchRequestTokenWithPath:@"oauth/request_token" method:@"GET" callbackURL:[NSURL URLWithString:@"cptwitterdemo://oauth"] scope:nil success:^(BDBOAuth1Credential *requestToken) {
+        NSLog(@"got the request token");
+        NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?oauth_token=%@",requestToken.token]];
+        [[UIApplication sharedApplication] openURL:authUrl options:[[NSDictionary alloc]init] completionHandler:^(BOOL success) {
+            if (!success) {
+                NSLog(@"failed to open twitter Authorize URL ");
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"failed to get the request token");
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
