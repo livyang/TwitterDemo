@@ -28,20 +28,30 @@
     [self.tableView registerNib:nib forCellReuseIdentifier:@"TweetTableViewCell"];
     
     [self connectTwitter];
+    
+    NSLog(@"after connected to twitter");
 }
 
 - (void) connectTwitter {
-    [[TwitterClient sharedInstance].requestSerializer removeAccessToken];
-    [[TwitterClient sharedInstance] fetchRequestTokenWithPath:@"oauth/request_token" method:@"GET" callbackURL:[NSURL URLWithString:@"cptwitterdemo://oauth"] scope:nil success:^(BDBOAuth1Credential *requestToken) {
-        NSLog(@"got the request token");
-        NSURL *authUrl = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/oauth/authorize?oauth_token=%@",requestToken.token]];
-        [[UIApplication sharedApplication] openURL:authUrl options:[[NSDictionary alloc]init] completionHandler:^(BOOL success) {
-            if (!success) {
-                NSLog(@"failed to open twitter Authorize URL ");
-            }
-        }];
-    } failure:^(NSError *error) {
-        NSLog(@"failed to get the request token");
+//     [[TwitterClient sharedInstance] login:^(User *user, NSError *error) {
+//         if (!error) {
+//             NSLog(@"I have logged in");
+//             //perform segue
+//         }
+//     }];
+    TwitterClient *clent = [TwitterClient sharedInstance];
+    [clent login:^(NSError *error) {
+        //perform segue
+        if (!error) {
+            [clent fetchCurrentUser:^(User *user, NSError *error) {
+                NSLog(@"user is %@", [user name]);
+            }];
+            [clent fetchTimeline:^(NSArray *tweets, NSError *error) {
+                for (Tweet *aTweet in tweets) {
+                    NSLog(@"tweet: %@", aTweet.text);
+                };
+            }];
+        };
     }];
 }
 

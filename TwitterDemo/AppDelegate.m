@@ -61,34 +61,7 @@
 
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
 
-    [[TwitterClient sharedInstance] fetchAccessTokenWithPath:@"oauth/access_token" method:@"POST" requestToken:[BDBOAuth1Credential credentialWithQueryString:url.query] success:^(BDBOAuth1Credential *accessToken) {
-        NSLog(@"got access token");
-        [[TwitterClient sharedInstance].requestSerializer saveAccessToken:accessToken];
-        [[TwitterClient sharedInstance] GET:@"1.1/account/verify_credentials.json" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-            NSLog(@"verify credentials request in progress");
-        
-        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"verify credentials request succeeded");
-            NSLog(@"current user is %@", responseObject);
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"verify credentials request failed with error %@", error.description);
-        }];
-        
-        [[TwitterClient sharedInstance] GET:@"1.1/statuses/home_timeline.json" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-            NSLog(@"timeline request in progress");
-            
-        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"timeline request succeeded");
-            NSLog(@"tweets are %@", responseObject);
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"timeline request failed with error %@", error.description);
-        }];
-
-        
-    } failure:^(NSError *error) {
-        NSLog(@"failed to get access token");
-    }];
-    
+    [[TwitterClient sharedInstance] handleOpenUrl:url];
     
     return YES;
 }
