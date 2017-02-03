@@ -7,8 +7,16 @@
 //
 
 #import "DetailTweetViewController.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface DetailTweetViewController ()
+//@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+//@property (weak, nonatomic) IBOutlet UILabel *NameAndHandleLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *userDescLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *TweetContentLabel;
+//@property (weak, nonatomic) IBOutlet UIButton *replyBtn;
+//@property (weak, nonatomic) IBOutlet UIButton *retweetBtn;
+//@property (weak, nonatomic) IBOutlet UIButton *favoriteBtn;
 
 @end
 
@@ -17,6 +25,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.NameAndHandleLabel.text = @"Li Yang@lyang";
+    self.userDescLabel.text = @"Here is a long description of Li Yang. Yeaaaaaah";
+    self.TweetContentLabel.text = @"This is the tweet content, this is the tweet content, this is the tweet content, this is the tweet content";
+    
+    //TODO: using model to populate the labels
 }
 
 - (void)didReceiveMemoryWarning {

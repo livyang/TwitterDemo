@@ -11,9 +11,10 @@
 #import "TwitterClient.h"
 #import "NavigationManager.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import "DetailTweetViewController.h"
 
 
-@interface TwsListViewController () <UITableViewDataSource>
+@interface TwsListViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (nonatomic, strong) NSArray<Tweet *> *tweets;
@@ -27,6 +28,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     self.tableView.estimatedRowHeight = 200;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     UINib *nib =[UINib nibWithNibName:@"TweetTableViewCell" bundle:nil];
@@ -38,6 +40,9 @@
     self.tableView.refreshControl = [[UIRefreshControl alloc]init];
     [self.tableView addSubview:self.tableView.refreshControl];
     [self.tableView.refreshControl addTarget:self action:@selector(fetchTweets) forControlEvents:UIControlEventValueChanged];
+    
+    
+    
 }
 
 -(void) fetchTweets {
@@ -109,8 +114,32 @@
     }else {
         cell.reTweetContainerHeightConstraint.constant = 24;
     }
-    
+        
     return cell;
+}
+
+
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"Here!!!!!!");
+    
+    Tweet *tweet;
+    NSLog(@"cell clicked %@",
+          [self.tweets objectAtIndex:indexPath.row].text);
+    // get model
+    tweet = [self.tweets objectAtIndex:indexPath.row];
+    
+    DetailTweetViewController *detailViewController =  [[DetailTweetViewController alloc] initWithNibName:@"DetailTweetViewController" bundle:nil];
+    
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+//    [navController.navigationBar setBarTintColor:[UIColor blueColor]];
+    
+    //TODO: why it is not visible
+//    navController.navigationItem.hidesBackButton = NO;
+//    navController.tabBarController.t
+    
+    detailViewController.model = tweet;
+    NSLog(@"detail view controller is %@", detailViewController);
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 

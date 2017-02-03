@@ -29,16 +29,18 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RvL-X7-znE" userLabel="image container">
                         <rect key="frame" x="0.0" y="60" width="68" height="278"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SM5-J7-qKI">
-                                <rect key="frame" x="8" y="16" width="52" height="49"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SM5-J7-qKI">
+                                <rect key="frame" x="8" y="16" width="52" height="52"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="52" id="esw-Aa-c6a"/>
+                                    <constraint firstAttribute="height" constant="52" id="rAg-Em-Arw"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.85882271870000004" blue="0.85026009830000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="SM5-J7-qKI" firstAttribute="leading" secondItem="RvL-X7-znE" secondAttribute="leading" constant="8" id="7X3-aQ-NME"/>
-                            <constraint firstAttribute="bottom" secondItem="SM5-J7-qKI" secondAttribute="bottom" constant="193.5" id="IYx-8g-QlV"/>
-                            <constraint firstAttribute="trailing" secondItem="SM5-J7-qKI" secondAttribute="trailing" constant="8" id="XR1-3c-kfT"/>
                             <constraint firstAttribute="width" constant="68" id="bOp-jE-YaN"/>
                             <constraint firstItem="SM5-J7-qKI" firstAttribute="top" secondItem="RvL-X7-znE" secondAttribute="top" constant="16" id="wEi-f3-MQA"/>
                         </constraints>

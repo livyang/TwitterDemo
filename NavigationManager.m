@@ -31,16 +31,16 @@
 - (instancetype) init {
     //check if a user already logged in
     //TODO: got 403 error
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//
-//    UIViewController *root;
-//    if ([defaults objectForKey:@"currentUser"]) {
-//        root = [self twsListVC];
-//    }else {
-//        root = [self loginVC];
-//    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    UIViewController *root;
+    if ([defaults objectForKey:@"currentUser"]) {
+        root = [self twsListVC];
+    }else {
+        root = [self loginVC];
+    }
     
-    UIViewController *root = [self loginVC];
+    //UIViewController *root = [self loginVC];
     self.navigationController = [[UINavigationController alloc] init];
     self.navigationController.viewControllers = @[root];
     [self.navigationController setNavigationBarHidden:YES];
@@ -53,23 +53,23 @@
     // Create root VC for the tab's navigation controller
     TwsListViewController *vc = [[TwsListViewController alloc] initWithNibName:@"TwsListViewController" bundle:nil];
 //    vc.title = @"Tweets List";
+
     
-    // create tab item
-//    UITabBarItem *item = [[UITabBarItem alloc] initWithTitle:@"Logged In" image:nil tag:0];
-//    vc.tabBarItem = item;
+    // Create SignOut button
+    UINavigationItem *barItem = [[UINavigationItem alloc]init];
+    UIBarButtonItem *signOutBtn = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToLogin)];
+//    barItem.rightBarButtonItem = signOutBtn;
+    vc.navigationItem.leftBarButtonItem = signOutBtn;
+    // Create New button
+    UIBarButtonItem *newBtn = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToNew)];
+//    barItem.rightBarButtonItem = signOutBtn;
+    vc.navigationItem.rightBarButtonItem = newBtn;
     
     
     // create navigation controller
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
 
     [navController.navigationBar setBarTintColor:[UIColor blueColor]];
-   
-    UINavigationItem *barItem = [[UINavigationItem alloc]init];
-    UIBarButtonItem *signOutBtn = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToTwsList)];
-    barItem.rightBarButtonItem = signOutBtn;
-    
-    //TODO: find out why it doesn't work
-    navController.navigationItem.rightBarButtonItem = signOutBtn;
     
     // create tab bar view controller
     UITabBarController *tabController = [[UITabBarController alloc] init];
@@ -96,6 +96,11 @@
     NSArray *vcs = @[[self twsListVC]];
     [self.navigationController setViewControllers:vcs];
 
+}
+
+- (void) performSegueToNew {
+    //need to create new UIviewcontroller
+    NSLog(@"TODO");
 }
 
 - (UIViewController *)rootViewController

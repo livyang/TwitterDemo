@@ -17,7 +17,7 @@
 @property (nonatomic, strong) NSNumber *favorite_count;
 
 
--(id) initWithArray: (NSArray *) dict;
+-(id) initWithDictionary: (NSDictionary *) dict;
 
 + (NSArray *) tweetsWithArray:(NSArray *)tweets;
 
