@@ -7,8 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "TwsListViewController.h"
-#import "TwitterClient.h"
+//#import "TwsListViewController.h"
+//#import "TwitterClient.h"
+#import "NavigationManager.h"
 
 @interface AppDelegate ()
 
@@ -20,14 +21,19 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    TwsListViewController *viewController = [[TwsListViewController alloc] initWithNibName:@"TwsListViewController" bundle:nil];
+//    TwsListViewController *viewController = [[TwsListViewController alloc] initWithNibName:@"TwsListViewController" bundle:nil];
+//    
+//    CGRect frame = [UIScreen mainScreen].bounds;
+//    self.window = [[UIWindow alloc]initWithFrame:frame];
+//    
+//    self.window.rootViewController = viewController;
+//    
+//    [self.window makeKeyAndVisible];
     
-    CGRect frame = [UIScreen mainScreen].bounds;
-    self.window = [[UIWindow alloc]initWithFrame:frame];
-    
-    self.window.rootViewController = viewController;
-    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = [[NavigationManager sharedInstance] rootViewController];
     [self.window makeKeyAndVisible];
+
     
     return YES;
 }

@@ -7,6 +7,7 @@
 //
 
 #import "TwitterClient.h"
+#import "Utils.h"
 
 NSString * const kTwitterConsumerKey = @"UzkX2yuGV5qTZjv2Jfd3KzOTm";
 NSString * const kTwitterConsumerSecret = @"op0467NVJmTKXTE5EnLR3Dgp0KyFLC89bSKIGwNBHN8GClJ2S0";
@@ -37,7 +38,7 @@ void (^loginCompletion)(NSError*);
         NSLog(@"timeline request in progress");
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"timeline request succeeded");
-//        NSLog(@"tweets are %@", responseObject);
+        NSLog(@"tweets are %@", responseObject);
         NSArray *tweets = [Tweet tweetsWithArray:responseObject];
         completion(tweets, nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -53,7 +54,12 @@ void (^loginCompletion)(NSError*);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"verify credentials request succeeded");
 //        NSLog(@"current user is %@", responseObject);
+        
         User *user =[[User alloc] initWithDictionary:responseObject];
+        
+        //cache user in NSUserDefaults
+        [Utils cacheCurrentUser:responseObject];
+        
         completion(user, nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"verify credentials request failed with error %@", error.description);
@@ -101,36 +107,5 @@ void (^loginCompletion)(NSError*);
     }];
 }
 
-
-//- (void) openURL:NSURL *url (void (^)(User *user, NSArray *tweets, NSError *error))completion {
-//    [[TwitterClient sharedInstance] fetchAccessTokenWithPath:@"oauth/access_token" method:@"POST" requestToken:[BDBOAuth1Credential credentialWithQueryString:url.query] success:^(BDBOAuth1Credential *accessToken) {
-//        NSLog(@"got access token");
-//        [[TwitterClient sharedInstance].requestSerializer saveAccessToken:accessToken];
-//        [[TwitterClient sharedInstance] GET:@"1.1/account/verify_credentials.json" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-//            NSLog(@"verify credentials request in progress");
-//            
-//        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//            NSLog(@"verify credentials request succeeded");
-//            NSLog(@"current user is %@", responseObject);
-//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//            NSLog(@"verify credentials request failed with error %@", error.description);
-//        }];
-//        
-//        [[TwitterClient sharedInstance] GET:@"1.1/statuses/home_timeline.json" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-//            NSLog(@"timeline request in progress");
-//            
-//        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//            NSLog(@"timeline request succeeded");
-//            NSLog(@"tweets are %@", responseObject);
-//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//            NSLog(@"timeline request failed with error %@", error.description);
-//        }];
-//        
-//        
-//    } failure:^(NSError *error) {
-//        NSLog(@"failed to get access token");
-//    }];
-//
-//}
 
 @end

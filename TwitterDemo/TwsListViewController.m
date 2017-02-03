@@ -9,10 +9,15 @@
 #import "TwsListViewController.h"
 #import "TweetTableViewCell.h"
 #import "TwitterClient.h"
+#import "NavigationManager.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 
 @interface TwsListViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (nonatomic, strong) NSArray<Tweet *> *tweets;
+//@property (nonatomic, strong) User *currentUser;
 
 @end
 
@@ -27,33 +32,26 @@
     UINib *nib =[UINib nibWithNibName:@"TweetTableViewCell" bundle:nil];
     [self.tableView registerNib:nib forCellReuseIdentifier:@"TweetTableViewCell"];
     
-    [self connectTwitter];
+    [self fetchTweets];
     
-    NSLog(@"after connected to twitter");
+    //add pull to refresh
+    self.tableView.refreshControl = [[UIRefreshControl alloc]init];
+    [self.tableView addSubview:self.tableView.refreshControl];
+    [self.tableView.refreshControl addTarget:self action:@selector(fetchTweets) forControlEvents:UIControlEventValueChanged];
 }
 
-- (void) connectTwitter {
-//     [[TwitterClient sharedInstance] login:^(User *user, NSError *error) {
-//         if (!error) {
-//             NSLog(@"I have logged in");
-//             //perform segue
-//         }
-//     }];
-    TwitterClient *clent = [TwitterClient sharedInstance];
-    [clent login:^(NSError *error) {
-        //perform segue
+-(void) fetchTweets {
+    //get currentUser and tweets and reload table data
+    [[TwitterClient sharedInstance] fetchTimeline:^(NSArray *tweets, NSError *error) {
         if (!error) {
-            [clent fetchCurrentUser:^(User *user, NSError *error) {
-                NSLog(@"user is %@", [user name]);
-            }];
-            [clent fetchTimeline:^(NSArray *tweets, NSError *error) {
-                for (Tweet *aTweet in tweets) {
-                    NSLog(@"tweet: %@", aTweet.text);
-                };
-            }];
-        };
+            self.tweets = tweets;
+            [self.tableView reloadData];
+        }
     }];
+    
+    [self.tableView.refreshControl endRefreshing];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -61,14 +59,50 @@
 }
 
 -(NSInteger)tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger numberOfRows = 0;
     
-    return 20;
+    if (self.tweets.count > 0) {
+        numberOfRows = (self.tweets.count > 20)?20:self.tweets.count;
+    }
+        
+    return numberOfRows;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //todo
     TweetTableViewCell *cell =[ tableView dequeueReusableCellWithIdentifier:@"TweetTableViewCell" forIndexPath:indexPath];
+
+    Tweet *tweet = [self.tweets objectAtIndex:indexPath.row];
+    cell.Handle.text = [NSString stringWithFormat:@"@%@",tweet.user.name];
+    cell.Name.text = tweet.user.screenName;
+    [cell.profileImageView setImageWithURL:tweet.user.profileImageUrl];
+    cell.Content.text = tweet.text;
+    
+    NSDate *currentDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"dd.MM.YY HH:mm:ss"];
+    NSString *dateString = [dateFormatter stringFromDate:currentDate];
+    NSLog(@"%@",dateString);
+    
+       // Get conversion to months, days, hours, minutes
+    NSCalendarUnit unitFlags = NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear;
+    
+    NSDateComponents *breakdownInfo = [[NSCalendar currentCalendar] components:unitFlags fromDate:tweet.timeCreated  toDate:currentDate  options:0];
+    NSLog(@"Break down: %li min : %li hours : %li days : %li months: %li years", [breakdownInfo minute], [breakdownInfo hour], [breakdownInfo day], [breakdownInfo month], (long)[breakdownInfo year]);
+    NSString *numYear = (breakdownInfo.year == 0?@"": [NSString stringWithFormat: @"%liy-",breakdownInfo.year]);
+    NSString *numMon = (breakdownInfo.month == 0?@"": [NSString stringWithFormat: @"%lim-",breakdownInfo.month]);
+    NSString *numDay = (breakdownInfo.day == 0?@"": [NSString stringWithFormat: @"%lid-",breakdownInfo.day]);
+    NSString *numHour = (breakdownInfo.hour == 0?@"": [NSString stringWithFormat: @"%lih",breakdownInfo.hour]);
+    
+    NSString *tempStr = [NSString stringWithFormat:@"%@%@%@%@",numYear,numMon,numDay,numHour];
+    NSLog(@"temp ts is %@", tempStr);
+
+    NSString *ts = ([tempStr rangeOfString:@"-"].location != NSNotFound)?[tempStr substringToIndex:[tempStr rangeOfString:@"-"].location]:tempStr;
+
+    NSLog(@"ts is %@", ts);
+    
+    cell.Timestamp.text = ts;
     
     if (indexPath.row % 2){
         cell.reTweetContainerHeightConstraint.constant = 0;
