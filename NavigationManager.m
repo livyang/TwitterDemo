@@ -67,7 +67,7 @@
     // create navigation controller
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
 
-    [navController.navigationBar setBarTintColor:[UIColor blueColor]];
+//    [navController.navigationBar setBarTintColor:[UIColor blueColor]];
     
     // create tab bar view controller
     UITabBarController *tabController = [[UITabBarController alloc] init];
