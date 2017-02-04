@@ -51,9 +51,9 @@ static CFStringRef escapeChars = (CFStringRef) @":/?#[]@!$&'()*+,;=%";
 }
 - (IBAction)tapTweetBtn:(id)sender {
     NSString *tweetContent = self.tweetText.text;
-    NSString *encodedContent = [tweetContent stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet] ];
+//    NSString *encodedContent = [tweetContent stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet] ];
     
-    [[TwitterClient sharedInstance] postTweet:encodedContent completion:^(NSError *error) {
+    [[TwitterClient sharedInstance] postTweet:tweetContent completion:^(NSError *error) {
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
