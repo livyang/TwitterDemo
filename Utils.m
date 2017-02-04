@@ -18,9 +18,9 @@
     
     if (userData) {
         [defaults setObject:userData forKey:@"currentUser"];
-    }else {
+    }/*else {
         [defaults setObject:nil forKey:@"currentUser"];
-    }
+    }*/
     [defaults synchronize];
 }
 

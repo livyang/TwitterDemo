@@ -6,7 +6,7 @@
 //  Copyright © 2017 Li Yang. All rights reserved.
 //
 
-#import <BDBOAuth1SessionManager.h>
+#import "BDBOAuth1SessionManager.h"
 #import "User.h"
 #import "Tweet.h"
 
@@ -22,5 +22,6 @@
 - (void) fetchCurrentUser:(void (^)(User *user, NSError *error))completion;
 - (void)login:(void (^)(NSError *error))completion;
 - (void)handleOpenUrl:(NSURL *)url;
+-  (void) postTweet:(NSString *)text  completion:(void (^)(NSError *error))completionCallback;
 
 @end

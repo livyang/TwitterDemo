@@ -8,6 +8,7 @@
 
 #import "NavigationManager.h"
 #import "User.h"
+#import "NewTweetViewController.h"
 
 @interface NavigationManager ()
 
@@ -56,13 +57,10 @@
 
     
     // Create SignOut button
-    UINavigationItem *barItem = [[UINavigationItem alloc]init];
-    UIBarButtonItem *signOutBtn = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToLogin)];
-//    barItem.rightBarButtonItem = signOutBtn;
+    UIBarButtonItem *signOutBtn = [[UIBarButtonItem alloc] initWithTitle:@"Sign Out" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToLogin)];//    barItem.rightBarButtonItem = signOutBtn;
     vc.navigationItem.leftBarButtonItem = signOutBtn;
     // Create New button
     UIBarButtonItem *newBtn = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(performSegueToNew)];
-//    barItem.rightBarButtonItem = signOutBtn;
     vc.navigationItem.rightBarButtonItem = newBtn;
     
     
@@ -100,7 +98,17 @@
 
 - (void) performSegueToNew {
     //need to create new UIviewcontroller
-    NSLog(@"TODO");
+    NewTweetViewController *newTweetVC =  [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
+
+    NSLog(@"detail view controller is %@", newTweetVC);
+    [self.navigationController pushViewController:newTweetVC animated:YES];
+    
+//    NSArray *vcs = @[newTweetVC];
+//    [self.navigationController setViewControllers:vcs];
+
+    
+    
+
 }
 
 - (UIViewController *)rootViewController

@@ -26,11 +26,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.NameAndHandleLabel.text = @"Li Yang@lyang";
-    self.userDescLabel.text = @"Here is a long description of Li Yang. Yeaaaaaah";
-    self.TweetContentLabel.text = @"This is the tweet content, this is the tweet content, this is the tweet content, this is the tweet content";
+//    self.NameAndHandleLabel.text = @"Li Yang@lyang";
+//    self.userDescLabel.text = @"Here is a long description of Li Yang. Yeaaaaaah";
+//    self.TweetContentLabel.text = @"This is the tweet content, this is the tweet content, this is the tweet content, this is the tweet content";
     
     //TODO: using model to populate the labels
+    self.NameAndHandleLabel.text = [NSString stringWithFormat:@"%@@%@", self.model.user.screenName, self.model.user.name];
+//    self.userDescLabel.text = self.model.user.description;
+    self.TweetContentLabel.text = self.model.text;
+    [self.profileImageView setImageWithURL:self.model.user.profileImageUrl];
+    
 }
 
 - (void)didReceiveMemoryWarning {

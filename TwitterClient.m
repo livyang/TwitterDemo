@@ -107,5 +107,22 @@ void (^loginCompletion)(NSError*);
     }];
 }
 
+- (void) postTweet:(NSString *)text  completion:(void (^)(NSError *error))completionCallback{
+    
+    NSMutableDictionary *param = [[NSMutableDictionary alloc]init];
+    [param setObject:text forKey:@"status"];
+    
+    [[TwitterClient sharedInstance] POST:@"1.1/statuses/update.json" parameters:param progress:^(NSProgress * _Nonnull uploadProgress) {
+        NSLog(@"sending tweet in progress");
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"tweet sent successfully, response is %@", responseObject);
+        completionCallback(nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"failed to tweet with error: %@", error);
+        completionCallback(error);
+    }];
+
+}
+
 
 @end
